@@ -8,6 +8,7 @@ angular.module('textAngular.validators', [])
 			if (isNaN(max)){
 				throw('Max text must be an integer');
 			}
+			scope.charlimit = max;
 			attrs.$observe('taMaxText', function(value){
 				max = parseInt(value);
 				if (isNaN(max)){

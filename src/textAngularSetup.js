@@ -685,9 +685,10 @@ angular.module('textAngularSetup', [])
 		}
 	});
 	taRegisterTool('charcount', {
-		display: '<div id="toolbarCC" style="display:block; min-width:120px;">Characters: <span ng-bind="charcount"></span></div>',
+		display: '<div id="toolbarCC" ng-class="{\'bg-danger\': charcount >= charlimit }" style="display:block; min-width:120px;">Characters: <span ng-bind="charcount"></span>/<span ng-bind="charlimit"></span></div>',
 		disabled: true,
 		charcount: 0,
+		charlimit:0,
 		activeState: function(){ // this fires on keyup
 			var textElement = this.$editor().displayElements.text;
 			var sourceText = textElement[0].innerText || textElement[0].textContent; // to cover the non-jquery use case.
@@ -698,6 +699,7 @@ angular.module('textAngularSetup', [])
 			this.charcount = noOfChars;
 			//Set editor scope
 			this.$editor().charcount = noOfChars;
+			this.charlimit = this.$editor().$parent.charlimit;
 			return false;
 		}
 	});
