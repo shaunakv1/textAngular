@@ -686,7 +686,7 @@ angular.module('textAngularSetup', [])
 		}
 	});
 	taRegisterTool('charcount', {
-		display: '<div id="toolbarCC" ng-class="{\'bg-danger\': charcount >= charlimit }" style="display:block; min-width:120px;">Characters: <span ng-bind="charcount"></span>/<span ng-bind="charlimit"></span></div>',
+		display: '<div id="toolbarCC" style="display:block; min-width:120px;">Characters: <span ng-bind="charcount"></span>/<span ng-bind="charlimit"></span></div>',
 		disabled: true,
 		charcount: 0,
 		charlimit:0,
