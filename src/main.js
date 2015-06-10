@@ -83,14 +83,13 @@ textAngular.directive("textAngular", [
 	'$compile', '$timeout', 'taOptions', 'taSelection', 'taExecCommand',
 	'textAngularManager', '$window', '$document', '$animate', '$log', '$q', '$parse',
 	function($compile, $timeout, taOptions, taSelection, taExecCommand,
-		textAngularManager, $window, $document, $animate, $log, $q, $parse,$element){
+		textAngularManager, $window, $document, $animate, $log, $q, $parse){
 		return {
 			require: '?ngModel',
 			scope: {},
 			restrict: "EA",
 			priority: 2, // So we override validators correctly
 			link: function(scope, element, attrs, ngModel){
-
 				// all these vars should not be accessable outside this directive
 				var _keydown, _keyup, _keypress, _mouseup, _focusin, _focusout,
 					_originalContents, _toolbars,
@@ -155,12 +154,10 @@ textAngular.directive("textAngular", [
 				// clear the original content
 				element[0].innerHTML = '';
 
-				//console.log(attrs);
 				// Setup the HTML elements as variable references for use later
 				scope.displayElements = {
 					// we still need the hidden input even with a textarea as the textarea may have invalid/old input in it,
 					// wheras the input will ALLWAYS have the correct value.
-					element:$element,
 					forminput: angular.element("<input type='hidden' tabindex='-1' style='display: none;'>"),
 					html: angular.element("<textarea></textarea>"),
 					text: angular.element("<div></div>"),

@@ -948,7 +948,8 @@ angular.module('textAngular.validators', [])
 			};
 		}
 	};
-}).directive('taMinText', function(){
+})
+.directive('taMinText', function(){
 	return {
 		restrict: 'A',
 		require: 'ngModel',
@@ -973,7 +974,40 @@ angular.module('textAngular.validators', [])
 			};
 		}
 	};
+}).directive('taMaxWords', function(){
+ return {
+   restrict: 'A',
+   require: 'ngModel',
+   link: function(scope, elem, attrs, ctrl){
+     var max = parseInt(scope.$eval(attrs.taMaxWords));
+     if (isNaN(max)){
+       throw('Max words must be an integer');
+     }
+     scope.wordlimit = max;
+     attrs.$observe('taMaxWords', function(value){
+       max = parseInt(value);
+       if (isNaN(max)){
+         throw('Max words must be an integer');
+       }
+       if (ctrl.$dirty){
+         ctrl.$validate();
+       }
+     });
+     ctrl.$validators.taMaxWords = function(viewValue){
+       var wordcount = 0;
+       if (viewValue.replace(/\s*<[^>]*?>\s*/g, '') !== '') {
+					wordcount = viewValue.replace(/<\/?(b|i|em|strong|span|u|strikethrough|a|img|small|sub|sup|label)( [^>*?])?>/gi, '') // remove inline tags without adding spaces
+										.replace(/(<[^>]*?>\s*<[^>]*?>)/ig, ' ') // replace adjacent tags with possible space between with a space
+										.replace(/(<[^>]*?>)/ig, '') // remove any singular tags
+										.replace(/\s+/ig, ' ') // condense spacing
+										.match(/\S+/g).length; // count remaining non-space strings
+			}
+       return wordcount <= max;
+     };
+   }
+ };
 });
+
 angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'])
 .service('_taBlankTest', [function(){
 	var INLINETAGS_NONBLANK = /<(a|abbr|acronym|bdi|bdo|big|cite|code|del|dfn|img|ins|kbd|label|map|mark|q|ruby|rp|rt|s|samp|time|tt|var)[^>]*(>|$)/i;
@@ -1897,14 +1931,13 @@ textAngular.directive("textAngular", [
 	'$compile', '$timeout', 'taOptions', 'taSelection', 'taExecCommand',
 	'textAngularManager', '$window', '$document', '$animate', '$log', '$q', '$parse',
 	function($compile, $timeout, taOptions, taSelection, taExecCommand,
-		textAngularManager, $window, $document, $animate, $log, $q, $parse,$element){
+		textAngularManager, $window, $document, $animate, $log, $q, $parse){
 		return {
 			require: '?ngModel',
 			scope: {},
 			restrict: "EA",
 			priority: 2, // So we override validators correctly
 			link: function(scope, element, attrs, ngModel){
-
 				// all these vars should not be accessable outside this directive
 				var _keydown, _keyup, _keypress, _mouseup, _focusin, _focusout,
 					_originalContents, _toolbars,
@@ -1969,12 +2002,10 @@ textAngular.directive("textAngular", [
 				// clear the original content
 				element[0].innerHTML = '';
 
-				//console.log(attrs);
 				// Setup the HTML elements as variable references for use later
 				scope.displayElements = {
 					// we still need the hidden input even with a textarea as the textarea may have invalid/old input in it,
 					// wheras the input will ALLWAYS have the correct value.
-					element:$element,
 					forminput: angular.element("<input type='hidden' tabindex='-1' style='display: none;'>"),
 					html: angular.element("<textarea></textarea>"),
 					text: angular.element("<div></div>"),

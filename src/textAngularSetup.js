@@ -658,9 +658,10 @@ angular.module('textAngularSetup', [])
 		}
 	});
 	taRegisterTool('wordcount', {
-		display: '<div id="toolbarWC" style="display:block; min-width:100px;">Words: <span ng-bind="wordcount"></span></div>',
+		display: '<div id="toolbarWC" style="display:block; min-width:100px;">Words: <span ng-bind="wordcount"></span>/<span ng-bind="wordlimit"></span></div></div>',
 		disabled: true,
 		wordcount: 0,
+		wordlimit:0,
 		activeState: function(){ // this fires on keyup
 			var textElement = this.$editor().displayElements.text;
 			/* istanbul ignore next: will default to '' when undefined */
@@ -678,9 +679,9 @@ angular.module('textAngularSetup', [])
 
 			//Set current scope
 			this.wordcount = noOfWords;
+			this.wordlimit = this.$editor().$parent.wordlimit;
 			//Set editor scope
 			this.$editor().wordcount = noOfWords;
-
 			return false;
 		}
 	});
@@ -697,9 +698,9 @@ angular.module('textAngularSetup', [])
 			var noOfChars = sourceText.replace(/(\r\n|\n|\r)/gm,"").replace(/^\s+/g,' ').replace(/\s+$/g, ' ').length;
 			//Set current scope
 			this.charcount = noOfChars;
+			this.charlimit = this.$editor().$parent.charlimit;
 			//Set editor scope
 			this.$editor().charcount = noOfChars;
-			this.charlimit = this.$editor().$parent.charlimit;
 			return false;
 		}
 	});
